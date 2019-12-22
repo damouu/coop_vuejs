@@ -1,6 +1,6 @@
 <template>
     <div class="dede">
-    <p> from components Log  </p>
+    <p> from v1.0 </p>
     </div>
 </template>
 <script>
