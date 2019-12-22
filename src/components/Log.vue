@@ -1,9 +1,8 @@
 <template>
     <div class="dede">
-    <p> page de dede </p>
+    <p> from components Log  </p>
     </div>
 </template>
-
 <script>
     export default {
         name: "Log",
@@ -13,6 +12,6 @@
 <style scoped>
 
     .dede{
-        background-color: red;
+        background-color: grey;
     }
 </style>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Log from "../components/Log";
 import HelloWorld from "../components/HelloWorld";
+import LogPage from "../views/LogPage";
 
 Vue.use(VueRouter)
 
@@ -13,9 +14,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/Log',
-    name: 'Log',
-    component: Log
+    path: '/LogPage',
+    name: 'LogPage',
+    component: LogPage
   },
   {
     path: '/about',
