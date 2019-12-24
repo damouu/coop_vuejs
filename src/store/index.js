@@ -13,9 +13,19 @@ export default new Vuex.Store({
   plugins : [vp.plugin],
   state: {
     user : false,
+    email : '',
   },
   mutations: {
-
+    email(state,email){
+      state.email = email;
+    },
+    user(state,user){
+      state.user = user;
+    }
+  },
+  getters: {
+    email  : state => state.email,
+    user   : state => state.user,
   },
   actions: {
   },
