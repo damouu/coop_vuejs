@@ -12,8 +12,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   plugins : [vp.plugin],
   state: {
-    user : false,
+    user  : false,
     email : '',
+    dede: false
   },
   mutations: {
     email(state,email){
@@ -21,11 +22,15 @@ export default new Vuex.Store({
     },
     user(state,user){
       state.user = user;
+    },
+    dede(state,dede){
+      state.dede = dede;
     }
   },
   getters: {
     email  : state => state.email,
     user   : state => state.user,
+    dede   : state => state.dede,
   },
   actions: {
   },
