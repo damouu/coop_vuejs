@@ -12,25 +12,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   plugins : [vp.plugin],
   state: {
-    user  : false,
     email : '',
-    dede: false
+    password: ''
   },
   mutations: {
     email(state,email){
       state.email = email;
     },
-    user(state,user){
-      state.user = user;
-    },
-    dede(state,dede){
-      state.dede = dede;
+    password(state,password){
+      state.password = password;
     }
   },
   getters: {
-    email  : state => state.email,
-    user   : state => state.user,
-    dede   : state => state.dede,
+    email      : state => state.email,
+    password   : state => state.password,
   },
   actions: {
   },

@@ -15,11 +15,6 @@
             Log
         },
         mounted() {
-            axios.get('ping').then(()=> {
-                console.log("ping oui");
-            }).catch(()=>{
-                alert("cannot connect to API");
-            });
         },
         methods : {
         }
