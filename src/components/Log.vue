@@ -13,11 +13,12 @@
             this.$store.commit('password')
             },
             buttonLogin: function(event) {
-                axios
-                    .get('v1/bpi/currentprice.json')
-                    .then(response => (this.$store.state.password = response))
-                    .catch(error => console.log(error))
-            },
+                axios.get('ping').then(()=> {
+                    alert("ping oui");
+                }).catch(()=>{
+                    alert("cannot connect to API");
+                });
+        },
         }
     }
 </script>
