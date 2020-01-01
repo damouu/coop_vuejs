@@ -7,6 +7,8 @@
         <input  class="input is-info"     v-on:input="changed" type="password"  placeholder="rien"> <br/>
         <button class="button is-success" v-on:click="buttonCreateUser"> Create user </button>
         <button class="button is-info is-rounded" v-on:click="buttonViewUsers"> View users </button>
+        <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> log In </button>
+        <button class="button is-success is-hovered" v-on:click="buttonLogOut"> log out </button>
         <div v-for="users in $store.getters.response">
             {{users}}
         </div>
@@ -38,9 +40,26 @@
             },
             buttonViewUsers: function(event) {
                 axios
-                    .get('members')
+                    .get('members',{
+                        session_token : "57893d7fc2266cdc2fefa77c0ed6a31a3ce35c07"
+                    })
                     .then(response => (this.$store.state.response = response)
                     .catch(error => console.log(error)))
+            },
+            buttonLogIn: function(event) {
+                axios
+                    .post('members/signin',{
+                        email :    this.$store.getters.email,
+                        password : this.$store.getters.password
+                    })
+                    .catch(error => console.log(error))
+            },
+            buttonLogOut: function(event) {
+                axios
+                    .delete('members/signout',{
+                        session_token : "57893d7fc2266cdc2fefa77c0ed6a31a3ce35c07"
+                    })
+                    .catch(error => console.log(error))
             },
         }
     }
