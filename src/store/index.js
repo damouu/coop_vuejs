@@ -16,8 +16,16 @@ export default new Vuex.Store({
     password: '',
     fullname : '',
     response : '',
+    conversation_label : '',
+    conversation_topic : ''
   },
   mutations: {
+    conversation_label(state,conversation_label){
+      state.conversation_label = conversation_label;
+    },
+    conversation_topic(state,conversation_topic){
+      state.conversation_topic = conversation_topic;
+    },
     fullname(state,fullname){
       state.fullname = fullname;
     },
@@ -32,6 +40,8 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    conversation_label : state => state.conversation_label,
+    conversation_topic : state => state.conversation_topic,
     fullname   : state => state.fullname,
     email      : state => state.email,
     password   : state => state.password,
