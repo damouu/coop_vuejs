@@ -17,7 +17,10 @@ export default new Vuex.Store({
     fullname : '',
     response : '',
     conversation_label : '',
-    conversation_topic : ''
+    conversation_topic : '',
+    user_token : '',
+    user_id : '',
+    user : false
   },
   mutations: {
     conversation_label(state,conversation_label){
@@ -35,8 +38,17 @@ export default new Vuex.Store({
     password(state,password){
       state.password = password;
     },
+    user_token(state,user_token){
+      state.user_token = user_token;
+    },
+    user_id(state,user_id){
+      state.user_id = user_id;
+    },
     response(state,response){
       state.response = response;
+    },
+    user(state,user){
+      state.user = user;
     }
   },
   getters: {
@@ -45,7 +57,10 @@ export default new Vuex.Store({
     fullname   : state => state.fullname,
     email      : state => state.email,
     password   : state => state.password,
-    response   : state => state.response
+    response   : state => state.response,
+    user_token : state => state.user_token,
+    user_id    : state => state.user_id,
+    user       : state => state.user
   },
   actions: {
   },

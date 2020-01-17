@@ -15,7 +15,7 @@
                     .get('members',{
                         session_token : "57893d7fc2266cdc2fefa77c0ed6a31a3ce35c07"
                     })
-                    .then(response => (this.$store.state.response = response.data)
+                    .then(response => (this.$store.commit("response",response.data))
                     .catch(error => console.log(error)))
             },
             ViewUser: function(event) {

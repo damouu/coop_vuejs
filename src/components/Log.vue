@@ -6,6 +6,8 @@
         <input  class="input is-info"     v-on:input="password" type="password"  placeholder="password"> <br/>
         <button class="button is-success" v-on:click="buttonCreateUser"> Create an account </button>
         <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account </button>
+        <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out </button>
+        <p>{{this.$store.getters.user}}</p>
     </div>
 </template>
 <script>
@@ -35,7 +37,17 @@
                         email :    this.$store.getters.email,
                         password : this.$store.getters.password
                     })
-                    .then(alert('your are now connected'))
+                    .then(response => (this.$store.commit("user_token",response.data.token),
+                    this.$store.commit("user_id",response.data.member.id),
+                    this.$store.commit("user",true)
+                    .catch(error => alert("Incorrect values"))))
+            },
+            buttonLogout: function(event) {
+                axios
+                    .delete('members/signout',{
+                        session_token : this.$store.state.user_token
+                    })
+                    .then(this.$store.commit("user",false))
                     .catch(error => alert("Incorrect values"))
             },
         }
