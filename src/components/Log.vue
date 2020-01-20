@@ -7,7 +7,7 @@
         <button class="button is-success" v-on:click="buttonCreateUser"> Create an account </button>
         <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account </button>
         <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out </button>
-        <p>{{this.$store.getters.user}}</p>
+        <p>you are log as : {{this.$store.getters.fullname}}</p>
     </div>
 </template>
 <script>
@@ -39,15 +39,15 @@
                     })
                     .then(response => (this.$store.commit("user_token",response.data.token),
                     this.$store.commit("user_id",response.data.member.id),
+                    this.$store.commit("fullname",response.data.member.fullname),
                     this.$store.commit("user",true)
                     .catch(error => alert("Incorrect values"))))
             },
             buttonLogout: function(event) {
                 axios
-                    .delete('members/signout',{
-                        session_token : this.$store.state.user_token
-                    })
-                    .then(this.$store.commit("user",false))
+                    .delete('members/signout?session_token='+this.$store.getters.user_token,{})
+                    .then(this.$store.commit("user",false)),
+                    this.$store.commit("fullname"," ")
                     .catch(error => alert("Incorrect values"))
             },
         }

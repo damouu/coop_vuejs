@@ -10,9 +10,9 @@
             <button class="button is-success" v-on:click="buttonCreateConversation"> Create conversation</button>
         </div>
         <button class="button is-danger is-outlined" v-on:click="buttonAllConversation"> See all conversations</button>
-        <div v-for="conversations in $store.getters.conversations">
-            <router-link :to="{ name: '/Conversation', params: { userId: $store.getters.userId }}">
-            conversations : {{conversations.label}} {{conversations.created_at}}
+        <div v-for="conversation in $store.getters.conversations">
+            <router-link :to="{ name: 'conversation', params: { id: conversation.id }}">
+            conversation : {{conversation.label}} {{conversation.created_at}}
             </router-link>
         </div>
     </div>

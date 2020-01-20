@@ -16,6 +16,7 @@ export default new Vuex.Store({
     password: '',
     fullname : '',
     response : '',
+    conversations : '',
     conversation_label : '',
     conversation_topic : '',
     user_token : '',
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     password(state,password){
       state.password = password;
+    },
+    conversations(state,conversations){
+      state.conversations = conversations;
     },
     user_token(state,user_token){
       state.user_token = user_token;
@@ -60,7 +64,8 @@ export default new Vuex.Store({
     response   : state => state.response,
     user_token : state => state.user_token,
     user_id    : state => state.user_id,
-    user       : state => state.user
+    user       : state => state.user,
+    conversations : state => state.conversations
   },
   actions: {
   },
