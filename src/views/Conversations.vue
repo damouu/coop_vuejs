@@ -6,10 +6,10 @@
 
 <script>
   // @ is an alias to /src
-  import Conv from '@/components/Conv.vue'
+  import Conv from '@/components/Conversation_Page.vue'
 
   export default {
-    name: 'Conversation',
+    name: 'Conversations',
     components: {
       Conv
     },

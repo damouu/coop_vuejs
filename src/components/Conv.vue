@@ -1,20 +1,8 @@
 <template>
     <div class="column is-4 is-offset-4">
-        <img alt="Vue logo"
-             src="http://conseilsjeux.com/wp-content/uploads/2019/12/Comment-obtenir-le-filtre-quotQuels-Pok%C3%A9mon-%C3%AAtes-vousquot-sur-Instagram.jpg">
-        <div v-show="this.$store.state.user === true">
-            <input class="input is-info" v-on:input="conversation_label" type="text" placeholder="Conversation's label">
-            <br/>
-            <input class="input is-info" v-on:input="conversation_topic" type="text" placeholder="Conversation's topic">
-            <br/>
-            <button class="button is-success" v-on:click="buttonCreateConversation"> Create conversation</button>
-        </div>
-        <button class="button is-danger is-outlined" v-on:click="buttonAllConversation"> See all conversations</button>
-        <div v-for="conversations in $store.getters.conversations">
-            <router-link :to="{ name: '/Conversation', params: { userId: $store.getters.userId }}">
-            conversations : {{conversations.label}} {{conversations.created_at}}
-            </router-link>
-        </div>
+        <img alt="Vue logo" src="https://i.ytimg.com/vi/uG3SqjVoFos/maxresdefault.jpg">
+        <button class="button is-success" v-on:click="buttonCreateConversation"> See a conversation</button>
+        {{this.$route.params.id}}
     </div>
 </template>
 <script>
@@ -31,18 +19,8 @@
             },
             buttonCreateConversation: function (event) {
                 axios
-                    .post('channels', {
-                        label: this.$store.getters.conversation_label,
-                        topic: this.$store.getters.conversation_topic,
-                        session_token: this.$store.getters.user_token,
-                    })
+                    .get('channels/id='+this.$router.params.id, {})
                     .catch(error => console.log(error))
-            },
-            buttonAllConversation: function (event) {
-                axios
-                    .get('channels?session_token=' + this.$store.getters.user_token, {})
-                    .then(response => (this.$store.commit("conversations", response.data))
-                        .catch(error => console.log(error)))
             },
         }
     }

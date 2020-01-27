@@ -25,8 +25,17 @@ const routes = [
     component: ViewU
   },
   {
-    path: '/Conversation',
-    name: 'Conversation',
+    path: '/Conversations',
+    name: 'Conversations',
+    props :true,
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Conversations.vue')
+  },
+  {
+    path: '/conversation',
+    name: 'conversation',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
