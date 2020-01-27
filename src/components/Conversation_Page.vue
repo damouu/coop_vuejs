@@ -10,9 +10,10 @@
             <button class="button is-success" v-on:click="buttonCreateConversation"> Create conversation</button>
         </div>
         <button class="button is-danger is-outlined" v-on:click="buttonAllConversation"> See all conversations</button>
+        <button class="button is-info is-rounded" v-on:click="buttondeleteConversation"> deleteConversation</button>
         <div v-for="conversation in $store.getters.conversations">
             <router-link :to="{ name: 'conversation', params: { id: conversation.id }}">
-            conversation : {{conversation.label}} {{conversation.created_at}}
+                conversation : {{conversation.label}} {{conversation.created_at}}
             </router-link>
         </div>
     </div>
@@ -36,6 +37,11 @@
                         topic: this.$store.getters.conversation_topic,
                         session_token: this.$store.getters.user_token,
                     })
+                    .catch(error => console.log(error))
+            },
+            buttondeleteConversation: function (event) {
+                axios
+                    .delete('channels/' + "3e8315eb4eb19f2c72d7c07af935b8a0f2f43d48" + "?token=" + this.$store.getters.user_token, {})
                     .catch(error => console.log(error))
             },
             buttonAllConversation: function (event) {

@@ -21,17 +21,25 @@ export default new Vuex.Store({
     conversation_topic : '',
     user_token : '',
     user_id : '',
+    message : '',
+    AllConvMessage : '',
     user : false
   },
   mutations: {
     conversation_label(state,conversation_label){
       state.conversation_label = conversation_label;
     },
+    AllConvMessage(state,AllConvMessage){
+      state.AllConvMessage = AllConvMessage;
+    },
     conversation_topic(state,conversation_topic){
       state.conversation_topic = conversation_topic;
     },
     fullname(state,fullname){
       state.fullname = fullname;
+    },
+    message(state,message){
+      state.message = message;
     },
     email(state,email){
       state.email = email;
@@ -65,6 +73,8 @@ export default new Vuex.Store({
     user_token : state => state.user_token,
     user_id    : state => state.user_id,
     user       : state => state.user,
+    message       : state => state.message,
+    AllConvMessage       : state => state.AllConvMessage,
     conversations : state => state.conversations
   },
   actions: {
