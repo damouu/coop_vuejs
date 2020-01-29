@@ -23,9 +23,13 @@ export default new Vuex.Store({
     user_id : '',
     message : '',
     AllConvMessage : '',
+    etatSession : '',
     user : false
   },
   mutations: {
+    etatSession(state,etatSession){
+      state.etatSession = etatSession;
+    },
     conversation_label(state,conversation_label){
       state.conversation_label = conversation_label;
     },
@@ -75,7 +79,8 @@ export default new Vuex.Store({
     user       : state => state.user,
     message       : state => state.message,
     AllConvMessage       : state => state.AllConvMessage,
-    conversations : state => state.conversations
+    conversations : state => state.conversations,
+    etatSession : state => state.etatSession
   },
   actions: {
   },

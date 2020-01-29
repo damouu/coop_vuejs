@@ -9,6 +9,12 @@
         <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account</button>
         <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out</button>
         <button class="button is-link is-active" v-on:click="buttonEtatSession"> etat de la session</button>
+        <h1 v-if="$store.getters.user === true">
+            you are log as {{$store.state.fullname}}
+        </h1>
+        <h1 v-else>
+            you are currently no log into any account.
+        </h1>
     </div>
 </template>
 <script>
@@ -41,7 +47,8 @@
                     .then(response => (this.$store.commit("user_token", response.data.token),
                         this.$store.commit("user_id", response.data.member.id),
                         this.$store.commit("fullname", response.data.member.fullname),
-                        this.$store.commit("user", true)
+                        this.$store.commit("user", true),
+                        this.$router.push('Conversations')
                             .catch(error => alert("Incorrect values"))))
             },
             buttonLogout: function (event) {
@@ -57,9 +64,8 @@
                         channel_id: this.$route.params.id,
                         token: this.$store.getters.user_token
                     })
-                    .then(response => (this.$store.commit("conversations", response.data))
+                    .then(response => (this.$store.commit("etatSession", response.data))
                         .catch(error => console.log(error)))
-
             },
         }
     }
