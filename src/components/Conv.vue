@@ -2,47 +2,73 @@
     <div class="column is-4 is-offset-4">
         <img alt="Vue logo" src="https://i.ytimg.com/vi/uG3SqjVoFos/maxresdefault.jpg">
         <p class="subtitle is-4"> topic : {{this.$route.params.topic}}</p>
-        <button class="button is-link is-active" v-on:click="buttonsetMessage"> Post Message</button>
-        <button class="button is-danger is-rounded" v-on:click="buttondeleteMessage"> deleteMessage</button>
         <div v-show="this.$store.state.user === true">
-            <textarea class="textarea is-danger" v-on:input="setMessage" placeholder="Danger textarea"></textarea>
+            <label class="label">Write a message</label>
+            <div class="control has-icons-left has-icons-right">
+                <input class="input is-info input is-rounded" v-model="Message" type="text" v-on:input="setMessage"
+                       v-on:keyup.enter="buttonsetMessage" ref="Message" placeholder="Message content">
+                <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+            </div>
         </div>
         <div v-for="message in $store.getters.AllConvMessage">
             {{message.member_id}} {{message.created_at}} : {{message.message}}
+            <button class="button is-danger is-outlined is-rounded" v-on:click=buttondeleteMessage(message.id)>
+                <span>Delete</span>
+                <span class="icon is-small">
+      <i class="fas fa-times"></i>
+    </span>
+            </button>
         </div>
+
     </div>
 </template>
 <script>
     export default {
         methods: {
-            buttongetConversation: function (event) {
-                axios
-                    .get('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
-                        channel_id: this.$route.params.id,
-                        token: this.$store.getters.user_token
-                    })
-                    .then(response => (this.$store.commit("AllConvMessage", response.data))
-                        .catch(error => console.log(error)))
-            },
-            buttonsetMessage: function (event) {
-                axios
-                    .post('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
-                        channel_id: this.$route.params.id,
-                        member_id: this.$store.getters.user_id,
-                        message: this.$store.getters.message,
-                        token: this.$store.getters.user_token
-                    })
-                    .then(response => (this.$store.commit("conversations", response.data)),
-                        this.buttongetConversation()
-                            .catch(error => console.log(error)))
-            },
             setMessage: function (event) {
                 this.$store.commit('message', event.target.value)
             },
-            buttondeleteMessage: function (event) {
-                axios
-                    .delete('channels/' + this.$route.params.id + "/posts/" + "7f7b597503d1a50deaa16cc0140e5e35ffc1d5f3" + "?token=" + this.$store.getters.user_token, {})
-                    .catch(error => console.log(error))
+            async buttongetConversation() {
+                try {
+                    await
+                        axios
+                            .get('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
+                                channel_id: this.$route.params.id,
+                                token: this.$store.getters.user_token
+                            })
+                            .then(response => (this.$store.commit("AllConvMessage", response.data)))
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async buttonsetMessage() {
+                try {
+                    await
+                        axios
+                            .post('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
+                                channel_id: this.$route.params.id,
+                                member_id: this.$store.getters.user_id,
+                                message: this.$store.getters.message,
+                                token: this.$store.getters.user_token
+                            })
+                            .then(response => (this.$store.commit("conversations", response.data)),
+                                this.buttongetConversation()),
+                        this.$refs.Message.value = null;
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async buttondeleteMessage(id_message) {
+                try {
+                    await
+                        axios
+                            .delete('channels/' + this.$route.params.id + "/posts/" + id_message + "?token=" + this.$store.getters.user_token, {})
+                    this.buttongetConversation()
+                } catch (error) {
+                    console.log(error)
+                }
             },
         },
         beforeMount() {
