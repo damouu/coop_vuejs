@@ -2,19 +2,56 @@
     <div class="column is-4 is-offset-4">
         <img alt="Vue logo"
              src="https://static1.millenium.us.org/articles/2/88/32/@/93282-2019-11-18-02h16-53-article_image_bd-1.png">
-        <input class="input is-danger" v-on:input="fullname" type="email" placeholder="fullanme"> <br/>
-        <input class="input is-info" v-on:input="email" type="password" placeholder="email"> <br/>
-        <input class="input is-info" v-on:input="password" type="password" placeholder="password"> <br/>
+        <div class="field">
+            <p class=" control has-icons-left has-icons-right" v-on:input="email">
+                <input class="input input is-primary" type="email" placeholder="Email">
+                <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left" v-on:input="fullname">
+                <input class="input is-danger" type="text" placeholder="fullname">
+                <span class="icon is-small is-left">
+      <i class="fas fa-info-circle"></i>
+    </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left" v-on:input="password">
+                <input class="input is-warning" type="password" placeholder="Password">
+                <span class="icon is-small is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+            </p>
+        </div>
         <button class="button is-success" v-on:click="buttonCreateUser"> Create an account</button>
         <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account</button>
         <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out</button>
         <button class="button is-link is-active" v-on:click="buttonEtatSession"> etat de la session</button>
-        <h1 v-if="$store.getters.user === true">
-            you are log as {{$store.state.fullname}}
-        </h1>
-        <h1 v-else>
-            you are currently no log into any account.
-        </h1>
+        <div v-if="$store.getters.user === true">
+            <article class="message is-success">
+                <div class="message-header">
+                    <p>Log state</p>
+                    <button class="delete" aria-label="delete"></button>
+                </div>
+                <div class="message-body">
+                    <strong>you are log as {{$store.state.fullname}}</strong>
+                </div>
+            </article>
+        </div>
+        <div v-else>
+            <article class="message">
+                <div class="message-header">
+                    <p>Log state</p>
+                    <button class="delete" aria-label="delete"></button>
+                </div>
+                <div class="message-body">
+                     <strong>Currently no log.</strong>
+                </div>
+            </article>
+        </div>
     </div>
 </template>
 <script>
@@ -29,44 +66,72 @@
             password: function (event) {
                 this.$store.commit('password', event.target.value)
             },
-            buttonCreateUser: function (event) {
-                axios
-                    .post('members', {
-                        fullname: this.$store.getters.fullname,
-                        email: this.$store.getters.email,
-                        password: this.$store.getters.password
-                    })
-                    .catch(error => console.log(error))
+            async buttonCreateUser() {
+                try {
+                    await
+                        axios
+                            .post('members', {
+                                fullname: this.$store.getters.fullname,
+                                email: this.$store.getters.email,
+                                password: this.$store.getters.password
+                            })
+                    axios
+                        .post('members/signin', {
+                            email: this.$store.getters.email,
+                            password: this.$store.getters.password
+                        })
+                        .then(response => (this.$store.commit("user_token", response.data.token),
+                            this.$store.commit("user_id", response.data.member.id),
+                            this.$store.commit("fullname", response.data.member.fullname),
+                            this.$store.commit("user", true),
+                            this.$router.push('Conversations')))
+                } catch (e) {
+                    alert("please fill all fields")
+                    console.log(e);
+                }
             },
-            buttonLogIn: function (event) {
-                axios
-                    .post('members/signin', {
-                        email: this.$store.getters.email,
-                        password: this.$store.getters.password
-                    })
-                    .then(response => (this.$store.commit("user_token", response.data.token),
-                        this.$store.commit("user_id", response.data.member.id),
-                        this.$store.commit("fullname", response.data.member.fullname),
-                        this.$store.commit("user", true),
-                        this.$router.push('Conversations')
-                            .catch(error => alert("Incorrect values"))))
+            async buttonLogout() {
+                try {
+                    await
+                        axios
+                            .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
+                            .then(this.$store.commit("user", false)),
+                        this.$store.commit("fullname", " ")
+                } catch (e) {
+                    console.log(e);
+                }
             },
-            buttonLogout: function (event) {
-                axios
-                    .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
-                    .then(this.$store.commit("user", false)),
-                    this.$store.commit("fullname", " ")
-                        .catch(error => alert("Incorrect values"))
+            async buttonEtatSession() {
+                try {
+                    await
+                        axios
+                            .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {
+                                channel_id: this.$route.params.id,
+                                token: this.$store.getters.user_token
+                            })
+                            .then(response => (this.$store.commit("etatSession", response.data)))
+                } catch (error) {
+                    alert("currently no log");
+                }
             },
-            buttonEtatSession: function (event) {
-                axios
-                    .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {
-                        channel_id: this.$route.params.id,
-                        token: this.$store.getters.user_token
-                    })
-                    .then(response => (this.$store.commit("etatSession", response.data))
-                        .catch(error => console.log(error)))
-            },
+            async buttonLogIn() {
+                try {
+                    await
+                        axios
+                            .post('members/signin', {
+                                email: this.$store.getters.email,
+                                password: this.$store.getters.password
+                            })
+                            .then(response => (this.$store.commit("user_token", response.data.token),
+                                    this.$store.commit("user_id", response.data.member.id),
+                                    this.$store.commit("fullname", response.data.member.fullname),
+                                    this.$store.commit("user", true),
+                                    this.$router.push('Conversations')
+                            ))
+                } catch (error) {
+                    alert("email or password incorrect");
+                }
+            }
         }
     }
 </script>

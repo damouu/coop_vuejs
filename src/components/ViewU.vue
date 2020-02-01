@@ -1,7 +1,7 @@
 <template>
-    <div class ="column is-4 is-offset-4">
-        <img    alt="Vue logo" src="https://static-cms.hotjar.com/images/user-behavior.width-750.jpg">
-        <button class="button is-info is-rounded" v-on:click="buttonViewUsers"> View members </button>
+    <div class="column is-4 is-offset-4">
+        <img class="is-rounded" alt="Vue logo" src="https://static-cms.hotjar.com/images/user-behavior.width-750.jpg">
+        <p class="is-4">Here are all the members</p>
         <div v-for="users in $store.getters.response">
             User : <a v-on:click="ViewUser">{{users.fullname}} </a>
         </div>
@@ -10,15 +10,18 @@
 <script>
     export default {
         methods: {
-            buttonViewUsers: function(event) {
+            buttonViewUsers: function (event) {
                 axios
-                    .get('members?session_token='+this.$store.getters.user_token,{})
-                    .then(response => (this.$store.commit("response",response.data))
-                    .catch(error => console.log(error)))
+                    .get('members?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("response", response.data))
+                        .catch(error => console.log(error)))
             },
-            ViewUser: function(event) {
+            ViewUser: function (event) {
                 alert("dede")
             },
+        },
+        beforeMount() {
+            this.buttonViewUsers();
         }
     }
 </script>
