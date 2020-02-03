@@ -14,15 +14,16 @@
         </div>
         <div v-for="message in $store.getters.AllConvMessage">
             {{message.member_id}} {{message.created_at}} : {{message.message}}
-            <button class="button is-danger is-outlined is-rounded" v-on:click=buttondeleteMessage(message.id)>
-                <span>Delete</span>
-                <span class="icon is-small">
+            <div v-show="message.member_id === $store.state.user_id">
+                <button class="button is-danger is-outlined is-rounded" v-on:click=buttondeleteMessage(message.id)>
+                    <span>Delete</span>
+                    <span class="icon is-small">
       <i class="fas fa-times"></i>
     </span>
-            </button>
+                </button>
+            </div>
         </div>
-
-    </div>
+        </div>
 </template>
 <script>
     export default {
