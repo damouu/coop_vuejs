@@ -4,7 +4,7 @@
             <p class="subtitle is-3">Welcome {{this.$store.getters.fullname}}</p>
             <img alt="Vue logo"
                  src="http://conseilsjeux.com/wp-content/uploads/2019/12/Comment-obtenir-le-filtre-quotQuels-Pok%C3%A9mon-%C3%AAtes-vousquot-sur-Instagram.jpg">
-            <h2 class="title">Here are all the current conversation</h2>
+            <h2 class="title">Here are all the current conversations</h2>
             <input class="input is-rounded input is-success" v-on:input="conversation_label" type="text"
                    placeholder="Conversation's label">
             <br/>

@@ -2,34 +2,40 @@
     <div class="column is-4 is-offset-4">
         <img alt="Vue logo" src="https://i.ytimg.com/vi/uG3SqjVoFos/maxresdefault.jpg">
         <p class="subtitle is-4"> topic : {{this.$route.params.topic}}</p>
+        <div v-for="message in $store.getters.AllConvMessage">
+            {{message.member_id}} {{message.created_at}} : {{message.message}}
+            <div class="control has-icons-left" v-show="message.member_id === $store.state.user_id">
+
+                <input class="input is-warning input is-rounded" v-model="Message" type="text" v-on:input="editMessage"
+                       v-on:keyup.enter="buttoneditMessage(message.id)" placeholder="Edit previous message">
+                <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+                </span>
+                <button class="button is-danger is-outlined is-rounded" v-on:click=buttondeleteMessage(message.id)>
+                    <span>Delete</span>
+                </button>
+            </div>
+        </div>
         <div v-show="this.$store.state.user === true">
             <label class="label">Write a message</label>
             <div class="control has-icons-left has-icons-right">
                 <input class="input is-info input is-rounded" v-model="Message" type="text" v-on:input="setMessage"
-                       v-on:keyup.enter="buttonsetMessage" ref="Message" placeholder="Message content">
+                       v-on:keyup.enter="buttonsetMessage" ref="Message" placeholder="Write a new message">
                 <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
     </span>
             </div>
         </div>
-        <div v-for="message in $store.getters.AllConvMessage">
-            {{message.member_id}} {{message.created_at}} : {{message.message}}
-            <div v-show="message.member_id === $store.state.user_id">
-                <button class="button is-danger is-outlined is-rounded" v-on:click=buttondeleteMessage(message.id)>
-                    <span>Delete</span>
-                    <span class="icon is-small">
-      <i class="fas fa-times"></i>
-    </span>
-                </button>
-            </div>
-        </div>
-        </div>
+    </div>
 </template>
 <script>
     export default {
         methods: {
             setMessage: function (event) {
                 this.$store.commit('message', event.target.value)
+            },
+            editMessage: function (event) {
+                this.$store.commit('editMessage', event.target.value)
             },
             async buttongetConversation() {
                 try {
@@ -66,6 +72,19 @@
                     await
                         axios
                             .delete('channels/' + this.$route.params.id + "/posts/" + id_message + "?token=" + this.$store.getters.user_token, {})
+                    this.buttongetConversation()
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async buttoneditMessage(message_id) {
+                try {
+                    await
+                        axios
+                            .post('channels/' + this.$route.params.id + "/posts?id=" + message_id + "&token=" + this.$store.getters.user_token, {
+                                message: this.$store.getters.editMessage,
+                            })
+                    this.buttondeleteMessage(message_id);
                     this.buttongetConversation()
                 } catch (error) {
                     console.log(error)

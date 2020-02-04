@@ -3,18 +3,18 @@
         <img alt="Vue logo"
              src="https://static1.millenium.us.org/articles/2/88/32/@/93282-2019-11-18-02h16-53-article_image_bd-1.png">
         <div class="field">
-            <p class=" control has-icons-left has-icons-right" v-on:input="email">
-                <input class="input input is-primary" type="email" placeholder="Email">
-                <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-            </p>
-        </div>
-        <div class="field">
             <p class="control has-icons-left" v-on:input="fullname">
                 <input class="input is-danger" type="text" placeholder="fullname">
                 <span class="icon is-small is-left">
       <i class="fas fa-info-circle"></i>
+    </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class=" control has-icons-left has-icons-right" v-on:input="email">
+                <input class="input input is-primary" type="email" placeholder="Email">
+                <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
     </span>
             </p>
         </div>
@@ -26,6 +26,15 @@
     </span>
             </p>
         </div>
+        <div class="field">
+            <p class="control has-icons-left" v-on:input="password">
+                <input class="input is-warning" type="password" placeholder="CheckPassword">
+                <span class="icon is-small is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+            </p>
+        </div>
+        <div v-if="h"
         <button class="button is-success" v-on:click="buttonCreateUser"> Create an account</button>
         <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account</button>
         <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out</button>
@@ -37,7 +46,7 @@
                     <button class="delete" aria-label="delete"></button>
                 </div>
                 <div class="message-body">
-                    <strong>you are log as {{$store.state.fullname}}</strong>
+                    <strong>you are log as {{$store.state.etatSession.member.fullname}}</strong>
                 </div>
             </article>
         </div>
@@ -48,7 +57,7 @@
                     <button class="delete" aria-label="delete"></button>
                 </div>
                 <div class="message-body">
-                     <strong>Currently no log.</strong>
+                    <strong>Currently no log.</strong>
                 </div>
             </article>
         </div>
@@ -96,7 +105,11 @@
                         axios
                             .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
                             .then(this.$store.commit("user", false)),
-                        this.$store.commit("fullname", " ")
+                        this.$store.commit("fullname", " "),
+                        this.$store.commit("user_id", " "),
+                        this.$store.commit("password", " "),
+                        this.$store.commit("user_token", " "),
+                        this.$store.commit("email", " ")
                 } catch (e) {
                     console.log(e);
                 }
@@ -110,6 +123,7 @@
                                 token: this.$store.getters.user_token
                             })
                             .then(response => (this.$store.commit("etatSession", response.data)))
+                    alert("you are log")
                 } catch (error) {
                     alert("currently no log");
                 }
@@ -125,6 +139,7 @@
                             .then(response => (this.$store.commit("user_token", response.data.token),
                                     this.$store.commit("user_id", response.data.member.id),
                                     this.$store.commit("fullname", response.data.member.fullname),
+                                    this.$store.commit("email", response.data.member.email),
                                     this.$store.commit("user", true),
                                     this.$router.push('Conversations')
                             ))
