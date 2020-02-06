@@ -1,7 +1,8 @@
 <template>
     <div class="column is-4 is-offset-4">
         <div v-if="this.$store.state.user === true">
-            <p class="subtitle is-3">Welcome {{this.$store.getters.fullname}}</p>
+            <p class="subtitle is-3"> Welcome <span
+                    style="color:mediumseagreen"> {{this.$store.getters.fullname}} </span></p>
             <img alt="Vue logo"
                  src="http://conseilsjeux.com/wp-content/uploads/2019/12/Comment-obtenir-le-filtre-quotQuels-Pok%C3%A9mon-%C3%AAtes-vousquot-sur-Instagram.jpg">
             <h2 class="title">Here are all the current conversations</h2>
@@ -13,7 +14,8 @@
             <br/>
             <button class="button is-success" v-on:click="buttonCreateConversation"> Submit</button>
             <div v-for="conversation in $store.getters.conversations">
-                <router-link :to="{ name: 'conversation', params: { id: conversation.id , topic: conversation.topic}}">
+                <router-link
+                        :to="{ name: 'conversation', params: { id: conversation.id , topic: conversation.topic , label: conversation.label}}">
                     {{conversation.label}} - {{conversation.topic}} : {{conversation.created_at}}
                 </router-link>
                 <button class="button is-danger is-outlined is-rounded"
@@ -74,9 +76,20 @@
                     console.log(error)
                 }
             },
+            async buttonViewUsers() {
+                try {
+                    await
+                        axios
+                            .get('members?session_token=' + this.$store.getters.user_token, {})
+                            .then(response => (this.$store.commit("response", response.data)))
+                } catch (error) {
+                    console.log(error)
+                }
+            },
         },
         beforeMount() {
             this.buttonAllConversation();
+            this.buttonViewUsers();
         }
     }
 </script>

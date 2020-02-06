@@ -141,7 +141,8 @@
                                     this.$store.commit("fullname", response.data.member.fullname),
                                     this.$store.commit("email", response.data.member.email),
                                     this.$store.commit("user", true),
-                                    this.$router.push('Conversations')
+                                    this.$router.push('Conversations'),
+                                    this.buttonEtatSession()
                             ))
                 } catch (error) {
                     alert("email or password incorrect");

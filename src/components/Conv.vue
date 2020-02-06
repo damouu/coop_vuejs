@@ -1,19 +1,25 @@
 <template>
     <div class="column is-4 is-offset-4">
         <img alt="Vue logo" src="https://i.ytimg.com/vi/uG3SqjVoFos/maxresdefault.jpg">
-        <p class="subtitle is-4"> topic : {{this.$route.params.topic}}</p>
-        <div v-for="message in $store.getters.AllConvMessage">
-            {{message.member_id}} {{message.created_at}} : {{message.message}}
-            <div class="control has-icons-left" v-show="message.member_id === $store.state.user_id">
-
-                <input class="input is-warning input is-rounded" v-model="Message" type="text" v-on:input="editMessage"
-                       v-on:keyup.enter="buttoneditMessage(message.id)" placeholder="Edit previous message">
-                <span class="icon is-small is-left">
+        <p class="subtitle is-4"> Label :<span style="color:mediumseagreen"> {{this.$route.params.label}}</span></p>
+        <p class="subtitle is-4"> Topic :<span style="color:mediumseagreen"> {{this.$route.params.topic}}</span></p>
+        <div v-for="user in $store.getters.response">
+            <div v-for="message in $store.getters.AllConvMessage">
+                <div v-if="user.id === message.member_id">
+                    {{user.fullname}} {{message.created_at}} : {{message.message}}
+                    <div class="control has-icons-left" v-show="message.member_id === $store.state.user_id">
+                        <input class="input is-warning input is-rounded" v-model="Message" type="text"
+                               v-on:input="editMessage"
+                               v-on:keyup.enter="buttoneditMessage(message.id)" placeholder="Edit previous message">
+                        <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
                 </span>
-                <button class="button is-danger is-outlined is-rounded" v-on:click=buttondeleteMessage(message.id)>
-                    <span>Delete</span>
-                </button>
+                        <button class="button is-danger is-outlined is-rounded"
+                                v-on:click=buttondeleteMessage(message.id)>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <div v-show="this.$store.state.user === true">
