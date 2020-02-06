@@ -20,7 +20,7 @@
         </div>
         <div class="field">
             <p class="control has-icons-left" v-on:input="password">
-                <input class="input is-warning" type="password" placeholder="Password">
+                <input class="input is-warning" type="password" placeholder="Password" name="Password" ref="Password">
                 <span class="icon is-small is-left">
       <i class="fas fa-lock"></i>
     </span>
@@ -28,7 +28,8 @@
         </div>
         <div class="field">
             <p class="control has-icons-left" v-on:input="password">
-                <input class="input is-warning" type="password" placeholder="CheckPassword">
+                <input class="input is-warning" type="password" placeholder="CheckPassword" name="CheckPassword"
+                       ref="CheckPassword">
                 <span class="icon is-small is-left">
       <i class="fas fa-lock"></i>
     </span>
@@ -76,27 +77,30 @@
                 this.$store.commit('password', event.target.value)
             },
             async buttonCreateUser() {
-                try {
-                    await
+                if (this.$refs.CheckPassword.value == this.$refs.Password.value) {
+                    try {
+                        await
+                            axios
+                                .post('members', {
+                                    fullname: this.$store.getters.fullname,
+                                    email: this.$store.getters.email,
+                                    password: this.$store.getters.password
+                                })
                         axios
-                            .post('members', {
-                                fullname: this.$store.getters.fullname,
+                            .post('members/signin', {
                                 email: this.$store.getters.email,
                                 password: this.$store.getters.password
                             })
-                    axios
-                        .post('members/signin', {
-                            email: this.$store.getters.email,
-                            password: this.$store.getters.password
-                        })
-                        .then(response => (this.$store.commit("user_token", response.data.token),
-                            this.$store.commit("user_id", response.data.member.id),
-                            this.$store.commit("fullname", response.data.member.fullname),
-                            this.$store.commit("user", true),
-                            this.$router.push('Conversations')))
-                } catch (e) {
-                    alert("please fill all fields")
-                    console.log(e);
+                            .then(response => (this.$store.commit("user_token", response.data.token),
+                                this.$store.commit("user_id", response.data.member.id),
+                                this.$store.commit("fullname", response.data.member.fullname),
+                                this.$store.commit("user", true),
+                                this.$router.push('Conversations')))
+                    } catch (e) {
+                        alert(e);
+                    }
+                } else {
+                    alert("please fill all fields or not the same password");
                 }
             },
             async buttonLogout() {
@@ -113,7 +117,8 @@
                 } catch (e) {
                     console.log(e);
                 }
-            },
+            }
+            ,
             async buttonEtatSession() {
                 try {
                     await
@@ -127,7 +132,8 @@
                 } catch (error) {
                     alert("currently no log");
                 }
-            },
+            }
+            ,
             async buttonLogIn() {
                 try {
                     await
