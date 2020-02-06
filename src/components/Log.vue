@@ -1,47 +1,153 @@
 <template>
-    <div class ="column is-4 is-offset-4">
-        <img    alt="Vue logo" src="https://static1.millenium.us.org/articles/2/88/32/@/93282-2019-11-18-02h16-53-article_image_bd-1.png">
-        <input  class="input is-danger"   v-on:input="fullname" type="email"   placeholder="fullanme"> <br/>
-        <input  class="input is-info"     v-on:input="email" type="password"  placeholder="email"> <br/>
-        <input  class="input is-info"     v-on:input="password" type="password"  placeholder="password"> <br/>
-        <input  class="input is-info"     v-on:input="changed" type="password"  placeholder="rien"> <br/>
-        <button class="button is-success" v-on:click="buttonCreateUser"> Create user </button>
-        <button class="button is-info is-rounded" v-on:click="buttonViewUsers"> View users </button>
-        <div v-for="users in $store.getters.response">
-            {{users}}
+    <div class="column is-4 is-offset-4">
+        <img alt="Vue logo"
+             src="https://static1.millenium.us.org/articles/2/88/32/@/93282-2019-11-18-02h16-53-article_image_bd-1.png">
+        <div class="field">
+            <p class="control has-icons-left" v-on:input="fullname">
+                <input class="input is-danger" type="text" placeholder="fullname">
+                <span class="icon is-small is-left">
+      <i class="fas fa-info-circle"></i>
+    </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class=" control has-icons-left has-icons-right" v-on:input="email">
+                <input class="input input is-primary" type="email" placeholder="Email">
+                <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left" v-on:input="password">
+                <input class="input is-warning" type="password" placeholder="Password">
+                <span class="icon is-small is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+            </p>
+        </div>
+        <div class="field">
+            <p class="control has-icons-left" v-on:input="password">
+                <input class="input is-warning" type="password" placeholder="CheckPassword">
+                <span class="icon is-small is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+            </p>
+        </div>
+        <div v-if="h"
+        <button class="button is-success" v-on:click="buttonCreateUser"> Create an account</button>
+        <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account</button>
+        <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out</button>
+        <button class="button is-link is-active" v-on:click="buttonEtatSession"> etat de la session</button>
+        <div v-if="$store.getters.user === true">
+            <article class="message is-success">
+                <div class="message-header">
+                    <p>Log state</p>
+                    <button class="delete" aria-label="delete"></button>
+                </div>
+                <div class="message-body">
+                    <strong>you are log as {{$store.state.etatSession.member.fullname}}</strong>
+                </div>
+            </article>
+        </div>
+        <div v-else>
+            <article class="message">
+                <div class="message-header">
+                    <p>Log state</p>
+                    <button class="delete" aria-label="delete"></button>
+                </div>
+                <div class="message-body">
+                    <strong>Currently no log.</strong>
+                </div>
+            </article>
         </div>
     </div>
 </template>
 <script>
     export default {
         methods: {
-            changed : function (event){
-            this.$store.commit('response')
-            },
-            fullname : function (event){
+            fullname: function (event) {
                 this.$store.commit('fullname', event.target.value)
             },
-            email : function (event){
+            email: function (event) {
                 this.$store.commit('email', event.target.value)
             },
-            password : function (event){
+            password: function (event) {
                 this.$store.commit('password', event.target.value)
             },
-            buttonCreateUser: function(event) {
-                axios
-                    .post('members',{
-                        fullname :  this.$store.getters.fullname,
-                        email :     this.$store.getters.email,
-                        password : this.$store.getters.password
-                    })
-                    .catch(error => console.log(error))
+            async buttonCreateUser() {
+                try {
+                    await
+                        axios
+                            .post('members', {
+                                fullname: this.$store.getters.fullname,
+                                email: this.$store.getters.email,
+                                password: this.$store.getters.password
+                            })
+                    axios
+                        .post('members/signin', {
+                            email: this.$store.getters.email,
+                            password: this.$store.getters.password
+                        })
+                        .then(response => (this.$store.commit("user_token", response.data.token),
+                            this.$store.commit("user_id", response.data.member.id),
+                            this.$store.commit("fullname", response.data.member.fullname),
+                            this.$store.commit("user", true),
+                            this.$router.push('Conversations')))
+                } catch (e) {
+                    alert("please fill all fields")
+                    console.log(e);
+                }
             },
-            buttonViewUsers: function(event) {
-                axios
-                    .get('members')
-                    .then(response => (this.$store.state.response = response)
-                    .catch(error => console.log(error)))
+            async buttonLogout() {
+                try {
+                    await
+                        axios
+                            .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
+                            .then(this.$store.commit("user", false)),
+                        this.$store.commit("fullname", " "),
+                        this.$store.commit("user_id", " "),
+                        this.$store.commit("password", " "),
+                        this.$store.commit("user_token", " "),
+                        this.$store.commit("email", " ")
+                } catch (e) {
+                    console.log(e);
+                }
             },
+            async buttonEtatSession() {
+                try {
+                    await
+                        axios
+                            .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {
+                                channel_id: this.$route.params.id,
+                                token: this.$store.getters.user_token
+                            })
+                            .then(response => (this.$store.commit("etatSession", response.data)))
+                    alert("you are log")
+                } catch (error) {
+                    alert("currently no log");
+                }
+            },
+            async buttonLogIn() {
+                try {
+                    await
+                        axios
+                            .post('members/signin', {
+                                email: this.$store.getters.email,
+                                password: this.$store.getters.password
+                            })
+                            .then(response => (this.$store.commit("user_token", response.data.token),
+                                    this.$store.commit("user_id", response.data.member.id),
+                                    this.$store.commit("fullname", response.data.member.fullname),
+                                    this.$store.commit("email", response.data.member.email),
+                                    this.$store.commit("user", true),
+                                    this.$router.push('Conversations'),
+                                    this.buttonEtatSession()
+                            ))
+                } catch (error) {
+                    alert("email or password incorrect");
+                }
+            }
         }
     }
 </script>
