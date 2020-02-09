@@ -47,6 +47,7 @@
                     <button class="delete" aria-label="delete"></button>
                 </div>
                 <div class="message-body">
+                    <img v-bind:src="'https://api.adorable.io/avatars/60/'+ $store.state.fullname"/>
                     <strong>you are log as {{$store.state.etatSession.member.fullname}}</strong>
                 </div>
             </article>

@@ -25,6 +25,9 @@ export default new Vuex.Store({
         AllConvMessage: '',
         etatSession: '',
         editMessage: '',
+        editConversationLabel: '',
+        editConversationTopic: '',
+        user_avatar: '',
         user: false
     },
     mutations: {
@@ -61,11 +64,20 @@ export default new Vuex.Store({
         user_id(state, user_id) {
             state.user_id = user_id;
         },
+        user_avatar(state, user_avatar) {
+            state.user_avatar = user_avatar;
+        },
         response(state, response) {
             state.response = response;
         },
         editMessage(state, editMessage) {
             state.editMessage = editMessage;
+        },
+        editConversationLabel(state, editConversationLabel) {
+            state.editConversationLabel = editConversationLabel;
+        },
+        editConversationTopic(state, editConversationTopic) {
+            state.editConversationTopic = editConversationTopic;
         },
         user(state, user) {
             state.user = user;
@@ -85,6 +97,7 @@ export default new Vuex.Store({
         AllConvMessage: state => state.AllConvMessage,
         conversations: state => state.conversations,
         editMessage: state => state.editMessage,
+        user_avatar: state => state.user_avatar,
         etatSession: state => state.etatSession
     },
     actions: {},

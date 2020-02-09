@@ -1,59 +1,62 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div class="hello">
+        <img v-bind:src="'https://api.adorable.io/avatars/100/'+ $route.params.user_fullname"/>
+        <div v-for="user in $store.getters.response">
+            <div v-if="user.id == $route.params.id">
+                User : {{user.fullname}}
+                Email : {{user.email}}
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+    export default {
+        name: 'HelloWorld',
+        methods: {
+            editConversationTopic: function (event) {
+                this.$store.commit('editConversationTopic', event.target.value)
+            },
+            async buttonViewUsers() {
+                try {
+                    await
+                        axios
+                            .get('members?session_token=' + this.$store.getters.user_token, {})
+                            .then(response => (this.$store.commit("response", response.data)))
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async buttonAllConversation() {
+                try {
+                    await
+                        axios
+                            .get('channels?session_token=' + this.$store.getters.user_token, {})
+                            .then(response => (this.$store.commit("conversations", response.data)))
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async buttongetMessages() {
+                try {
+                    await
+                        axios
+                            .get('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
+                                channel_id: this.$route.params.id,
+                                token: this.$store.getters.user_token
+                            })
+                            .then(response => (this.$store.commit("AllConvMessage", response.data)))
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            beforeMount() {
+                this.buttonViewUsers();
+                this.buttonAllConversation();
+                this.buttongetMessages();
+            }
+        }
+    }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

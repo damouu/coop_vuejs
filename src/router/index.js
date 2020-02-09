@@ -9,42 +9,51 @@ import ViewU from "../components/ViewU";
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/logpage',
-    name: 'LogPage',
-    component: LogPage
-  },
-  {
-    path: '/ViewUsers',
-    name: 'ViewUsers',
-    component: ViewU
-  },
-  {
-    path: '/Conversations',
-    name: 'Conversations',
-    props :true,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Conversations.vue')
-  },
-  {
-    path: '/conversation',
-    name: 'conversation',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Conversation.vue')
-  }
+    {
+        path: '/',
+        name: 'Home',
+        component: Home
+    },
+    {
+        path: '/logpage',
+        name: 'LogPage',
+        component: LogPage
+    },
+    {
+        path: '/ViewUsers',
+        name: 'ViewUsers',
+        component: ViewU
+    },
+    {
+        path: '/Conversations',
+        name: 'Conversations',
+        props: true,
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/Conversations.vue')
+    },
+    {
+        path: '/UserInfo',
+        name: 'UserInfo',
+        props: true,
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/UserInfo.vue')
+    },
+    {
+        path: '/conversation',
+        name: 'conversation',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/Conversation.vue')
+    }
 ]
 
 const router = new VueRouter({
-  routes
+    routes
 })
 
 export default router

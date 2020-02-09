@@ -1,12 +1,30 @@
 <template>
     <div class="column is-4 is-offset-4">
-        <img alt="Vue logo" src="https://i.ytimg.com/vi/uG3SqjVoFos/maxresdefault.jpg">
-        <p class="subtitle is-4"> Label :<span style="color:mediumseagreen"> {{this.$route.params.label}}</span></p>
-        <p class="subtitle is-4"> Topic :<span style="color:mediumseagreen"> {{this.$route.params.topic}}</span></p>
+        <div class="columns">
+            <div class="column is-12">
+                <img alt="Vue logo" src="https://i.ytimg.com/vi/uG3SqjVoFos/maxresdefault.jpg">
+                <p class="subtitle is-4"> Label :<span style="color:mediumseagreen"> {{this.$route.params.label}}</span>
+                </p>
+                <p class="subtitle is-4"> Topic :<span style="color:mediumseagreen"> {{this.$route.params.topic}}</span>
+                </p>
+                <input class="input is-warning input is-rounded" v-model="Message" type="text"
+                       v-on:input="editConversationLabel"
+                       placeholder="Edit conversation's label">
+                <input class="input is-warning input is-rounded" v-model="Message" type="text"
+                       v-on:input="editConversationTopic"
+                       placeholder="Edit conversation's topic">
+                <button class="button is-success" v-on:click="buttonEditConversation"> edit</button>
+            </div>
+        </div>
         <div v-for="user in $store.getters.response">
             <div v-for="message in $store.getters.AllConvMessage">
                 <div v-if="user.id === message.member_id">
-                    {{user.fullname}} {{message.created_at}} : {{message.message}}
+                    <router-link
+                            :to="{ name: 'UserInfo', params: { id: user.id , user_fullname: user.fullname}}">
+                        <img v-bind:src="'https://api.adorable.io/avatars/10/'+ user.fullname"/>
+                        {{user.fullname}}
+                    </router-link>
+                    {{message.created_at}} : {{message.message}}
                     <div class="control has-icons-left" v-show="message.member_id === $store.state.user_id">
                         <input class="input is-warning input is-rounded" v-model="Message" type="text"
                                v-on:input="editMessage"
@@ -43,7 +61,27 @@
             editMessage: function (event) {
                 this.$store.commit('editMessage', event.target.value)
             },
-            async buttongetConversation() {
+            editConversationLabel: function (event) {
+                this.$store.commit('editConversationLabel', event.target.value)
+            },
+            editConversationTopic: function (event) {
+                this.$store.commit('editConversationTopic', event.target.value)
+            },
+            async buttonEditConversation() {
+                try {
+                    await
+                        axios
+                            .put('channels/' + this.$route.params.id, {
+                                label: this.$store.state.editConversationLabel,
+                                topic: this.$store.state.editConversationTopic,
+                                token: this.$store.getters.user_token
+                            })
+                    this.$router.go("Conversations.vue");
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async buttongetMessages() {
                 try {
                     await
                         axios
@@ -67,7 +105,7 @@
                                 token: this.$store.getters.user_token
                             })
                             .then(response => (this.$store.commit("conversations", response.data)),
-                                this.buttongetConversation()),
+                                this.buttongetMessages()),
                         this.$refs.Message.value = null;
                 } catch (error) {
                     console.log(error)
@@ -78,7 +116,7 @@
                     await
                         axios
                             .delete('channels/' + this.$route.params.id + "/posts/" + id_message + "?token=" + this.$store.getters.user_token, {})
-                    this.buttongetConversation()
+                    this.buttongetMessages()
                 } catch (error) {
                     console.log(error)
                 }
@@ -87,18 +125,19 @@
                 try {
                     await
                         axios
-                            .post('channels/' + this.$route.params.id + "/posts?id=" + message_id + "&token=" + this.$store.getters.user_token, {
+                            .post('channels/' + this.$route.params.id + "/posts?id=" + message_id, {
                                 message: this.$store.getters.editMessage,
+                                token: this.$store.getters.user_token
                             })
                     this.buttondeleteMessage(message_id);
-                    this.buttongetConversation()
+                    this.buttongetMessages()
                 } catch (error) {
                     console.log(error)
                 }
             },
         },
         beforeMount() {
-            this.buttongetConversation();
+            this.buttongetMessages();
         }
     }
 </script>

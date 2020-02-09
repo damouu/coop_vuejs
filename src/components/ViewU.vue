@@ -2,11 +2,15 @@
     <div class="column is-4 is-offset-4">
         <img class="is-rounded" alt="Vue logo" src="https://static-cms.hotjar.com/images/user-behavior.width-750.jpg">
         <p class="is-4">Here are all the members</p>
-        <div v-for="users in $store.getters.response">
-            User : {{users.fullname}}
-            <div v-if="users.id !== $store.state.user_id">
+        <div v-for="user in $store.getters.response">
+            <router-link
+                    :to="{ name: 'UserInfo', params: { id: user.id , user_fullname: user.fullname}}">
+                <img v-bind:src="'https://api.adorable.io/avatars/60/'+ user.fullname"/>
+                {{user.fullname}}
+            </router-link>
+            <div v-if="user.id !== $store.state.user_id">
                 <button class="button is-danger is-outlined is-rounded"
-                        v-on:click=buttondeleteUser(users.id)>
+                        v-on:click=buttondeleteUser(user.id)>
                     <span>Delete</span>
                     <span class="icon is-small">
       <i class="fas fa-times"></i>
