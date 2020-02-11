@@ -3,8 +3,14 @@
         <img v-bind:src="'https://api.adorable.io/avatars/100/'+ $route.params.user_fullname"/>
         <div v-for="user in $store.getters.response">
             <div v-if="user.id == $route.params.id">
-                User : {{user.fullname}}
-                Email : {{user.email}}
+                <div class="column is-half is-offset-one-quarter">
+                    User : <span
+                        style="color:mediumseagreen">{{user.fullname}} </span>
+                </div>
+                <div class="column is-half is-offset-one-quarter">
+                    Email : <span
+                        style="color:mediumseagreen">{{user.email}} </span>
+                </div>
             </div>
         </div>
     </div>
@@ -37,14 +43,11 @@
                     console.log(error)
                 }
             },
-            async buttongetMessages() {
+            async buttongetMessages(channel_id) {
                 try {
                     await
                         axios
-                            .get('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
-                                channel_id: this.$route.params.id,
-                                token: this.$store.getters.user_token
-                            })
+                            .get('channels/' + channel_id + "/posts?token=" + this.$store.getters.user_token, {})
                             .then(response => (this.$store.commit("AllConvMessage", response.data)))
                 } catch (error) {
                     console.log(error)
@@ -53,7 +56,6 @@
             beforeMount() {
                 this.buttonViewUsers();
                 this.buttonAllConversation();
-                this.buttongetMessages();
             }
         }
     }

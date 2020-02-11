@@ -35,7 +35,6 @@
     </span>
             </p>
         </div>
-        <div v-if="h"
         <button class="button is-success" v-on:click="buttonCreateUser"> Create an account</button>
         <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account</button>
         <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out</button>
@@ -95,8 +94,10 @@
                             .then(response => (this.$store.commit("user_token", response.data.token),
                                 this.$store.commit("user_id", response.data.member.id),
                                 this.$store.commit("fullname", response.data.member.fullname),
+                                this.$store.commit("email", response.data.member.email),
                                 this.$store.commit("user", true),
-                                this.$router.push('Conversations')))
+                                this.$router.push('Conversations'),
+                                this.buttonEtatSession()))
                     } catch (e) {
                         alert(e);
                     }
