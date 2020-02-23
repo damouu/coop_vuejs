@@ -1,8 +1,8 @@
 <template>
+    <ViewU></ViewU>
 </template>
 
 <script>
-    // @ is an alias to /src
     import ViewU from '@/components/ViewU.vue'
 
     export default {
@@ -10,9 +10,6 @@
         components: {
             ViewU
         },
-        mounted() {
-        },
-        methods : {
-        }
+        methods: {}
     }
 </script>

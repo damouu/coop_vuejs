@@ -1,63 +1,17 @@
 <template>
     <div class="hello">
-        <img v-bind:src="'https://api.adorable.io/avatars/100/'+ $route.params.user_fullname"/>
-        <div v-for="user in $store.getters.response">
-            <div v-if="user.id == $route.params.id">
-                <div class="column is-half is-offset-one-quarter">
-                    User : <span
-                        style="color:mediumseagreen">{{user.fullname}} </span>
-                </div>
-                <div class="column is-half is-offset-one-quarter">
-                    Email : <span
-                        style="color:mediumseagreen">{{user.email}} </span>
-                </div>
-            </div>
-        </div>
+        <img alt="Vue logo" src="../assets/logo.png">
+        <p>Welcome to Coop by Sehbaoui sadek Mouad</p>
+        <a href="https://tools.sopress.net/iut/coop/doc/">Co'op API</a><br>
+        <a href="https://www.dropbox.com/s/ssz94ltizskx4es/coop.md?dl=0">coop.md</a><br>
+        <a href="https://bulma.io/">Bulma framework</a><br>
     </div>
 </template>
 
 <script>
     export default {
         name: 'HelloWorld',
-        methods: {
-            editConversationTopic: function (event) {
-                this.$store.commit('editConversationTopic', event.target.value)
-            },
-            async buttonViewUsers() {
-                try {
-                    await
-                        axios
-                            .get('members?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("response", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
-            },
-            async buttonAllConversation() {
-                try {
-                    await
-                        axios
-                            .get('channels?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("conversations", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
-            },
-            async buttongetMessages(channel_id) {
-                try {
-                    await
-                        axios
-                            .get('channels/' + channel_id + "/posts?token=" + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("AllConvMessage", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
-            },
-            beforeMount() {
-                this.buttonViewUsers();
-                this.buttonAllConversation();
-            }
-        }
+        methods: {}
     }
 </script>
 <style scoped>

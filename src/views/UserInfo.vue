@@ -1,17 +1,14 @@
 <template>
-    <div class="home">
-        <HelloWorld msg="Welcome to Your Vue.js App"/>
-    </div>
+    <UserProfile></UserProfile>
 </template>
 
 <script>
-    // @ is an alias to /src
-    import HelloWorld from '@/components/HelloWorld.vue'
+    import UserProfile from '@/components/UserProfile.vue'
 
     export default {
-        name: 'home',
+        name: 'UserPro',
         components: {
-            HelloWorld
+            UserProfile
         },
         mounted() {
         },

@@ -1,11 +1,8 @@
 <template>
-    <div class="log">
-        <log></log>
-    </div>
+    <log></log>
 </template>
 
 <script>
-    // @ is an alias to /src
     import Log from '@/components/Log.vue'
 
     export default {
@@ -15,7 +12,6 @@
         },
         mounted() {
         },
-        methods : {
-        }
+        methods: {}
     }
 </script>
