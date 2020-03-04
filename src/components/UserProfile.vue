@@ -11,6 +11,20 @@
                     Email : <span
                         style="color:mediumseagreen">{{user.email}} </span>
                 </div>
+                <div v-if="AllConvMessage.length > 0">
+                    <h2 class="subtitle">the user's last messages</h2>
+                    <div v-for="message in AllConvMessage">
+                        <router-link
+                                :to="{ name: 'conversation', params: { id: message.channel_id , message_id: message.id}}">
+                            <div class="list-item">
+                                {{message.created_at}} : {{message.message}}
+                            </div>
+                        </router-link>
+                    </div>
+                </div>
+                <div v-else>
+                    <p>the user has not yet posted any message.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -19,39 +33,55 @@
 <script>
     export default {
         name: 'HelloWorld',
+        data() {
+            return {
+                AllConvMessage: []
+            }
+        },
+        mounted() {
+            this.chargerLesMessage()
+        },
         methods: {
+            chargerLesMessage() {
+                axios
+                    .get('channels?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => {
+                        let conversations = response.data;
+                        conversations.forEach(conversation => {
+                            axios
+                                .get('channels/' + conversation.id + "/posts?token=" + this.$store.getters.user_token, {})
+                                .then(response => {
+                                    let messages = response.data;
+                                    messages.forEach(message => {
+                                        if (this.$route.params.id == message.member_id) {
+                                            this.AllConvMessage.push(message)
+                                        }
+                                    })
+                                })
+                        })
+                    })
+
+            },
             editConversationTopic: function (event) {
                 this.$store.commit('editConversationTopic', event.target.value)
             },
-            async buttonViewUsers() {
-                try {
-                    await
-                        axios
-                            .get('members?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("response", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            buttonViewUsers() {
+                axios
+                    .get('members?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("response", response.data)))
             },
-            async buttonAllConversation() {
-                try {
-                    await
-                        axios
-                            .get('channels?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("conversations", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            buttonAllConversation() {
+                axios
+                    .get('channels?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("conversations", response.data)))
+                    .catch(error => {
+                        alert("error catch");
+                    })
             },
-            async buttongetMessages(channel_id) {
-                try {
-                    await
-                        axios
-                            .get('channels/' + channel_id + "/posts?token=" + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("AllConvMessage", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            buttongetMessages(channel_id) {
+                axios
+                    .get('channels/' + channel_id + "/posts?token=" + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("AllConvMessage", response.data)))
             },
             beforeMount() {
                 this.buttonViewUsers();

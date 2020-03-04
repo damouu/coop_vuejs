@@ -27,7 +27,7 @@
             </div>
             <div class="column">
                 <div class="column is-three-fifths is-offset-one-fifth">
-                    <p>Create a new conversation</p>
+                    <p class="title is-3">Create a new conversation</p>
                     <input class="input is-rounded input is-success" v-on:input="conversation_label" type="text"
                            placeholder="Conversation's label">
                     <br/>

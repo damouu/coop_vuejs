@@ -76,85 +76,61 @@
             password: function (event) {
                 this.$store.commit('password', event.target.value)
             },
-            async buttonCreateUser() {
+            buttonCreateUser() {
                 if (this.$refs.CheckPassword.value == this.$refs.Password.value) {
-                    try {
-                        await
-                            axios
-                                .post('members', {
-                                    fullname: this.$store.getters.fullname,
-                                    email: this.$store.getters.email,
-                                    password: this.$store.getters.password
-                                })
-                        axios
-                            .post('members/signin', {
-                                email: this.$store.getters.email,
-                                password: this.$store.getters.password
-                            })
-                            .then(response => (this.$store.commit("user_token", response.data.token),
-                                this.$store.commit("user_id", response.data.member.id),
-                                this.$store.commit("fullname", response.data.member.fullname),
-                                this.$store.commit("email", response.data.member.email),
-                                this.$store.commit("user", true),
-                                this.$router.push('Conversations'),
-                                this.buttonEtatSession()))
-                    } catch (e) {
-                        alert(e);
-                    }
+                    axios
+                        .post('members', {
+                            fullname: this.$store.getters.fullname,
+                            email: this.$store.getters.email,
+                            password: this.$store.getters.password
+                        })
+                    axios
+                        .post('members/signin', {
+                            email: this.$store.getters.email,
+                            password: this.$store.getters.password
+                        })
+                        .then(response => (this.$store.commit("user_token", response.data.token),
+                            this.$store.commit("user_id", response.data.member.id),
+                            this.$store.commit("fullname", response.data.member.fullname),
+                            this.$store.commit("email", response.data.member.email),
+                            this.$store.commit("user", true),
+                            this.$store.commit("etatSession", response.data),
+                            this.$router.push('Conversations')))
                 } else {
-                    alert("please fill all fields or not the same password");
+                    alert("user already exist")
                 }
             },
-            async buttonLogout() {
-                try {
-                    await
-                        axios
-                            .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
-                            .then(this.$store.commit("user", false)),
-                        this.$store.commit("fullname", " "),
-                        this.$store.commit("user_id", " "),
-                        this.$store.commit("password", " "),
-                        this.$store.commit("user_token", " "),
-                        this.$store.commit("email", " ")
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-            ,
-            async buttonEtatSession() {
-                try {
-                    await
-                        axios
-                            .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {
-                                channel_id: this.$route.params.id,
-                                token: this.$store.getters.user_token
-                            })
-                            .then(response => (this.$store.commit("etatSession", response.data)))
-                    alert("you are log")
-                } catch (error) {
-                    alert("currently no log");
-                }
-            }
-            ,
-            async buttonLogIn() {
-                try {
-                    await
-                        axios
-                            .post('members/signin', {
-                                email: this.$store.getters.email,
-                                password: this.$store.getters.password
-                            })
-                            .then(response => (this.$store.commit("user_token", response.data.token),
-                                    this.$store.commit("user_id", response.data.member.id),
-                                    this.$store.commit("fullname", response.data.member.fullname),
-                                    this.$store.commit("email", response.data.member.email),
-                                    this.$store.commit("user", true),
-                                    this.$router.push('Conversations'),
-                                    this.buttonEtatSession()
-                            ))
-                } catch (error) {
-                    alert("email or password incorrect");
-                }
+            buttonLogout() {
+                axios
+                    .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
+                    .then(this.$store.commit("user", false)),
+                    this.$store.commit("fullname", " "),
+                    this.$store.commit("user_id", " "),
+                    this.$store.commit("password", " "),
+                    this.$store.commit("user_token", " "),
+                    this.$store.commit("etatSession", " "),
+                    this.$store.commit("email", " ")
+            },
+            buttonEtatSession() {
+                axios
+                    .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("etatSession", response.data)))
+                alert("you are log as " + this.$store.getters.etatSession.member.fullname)
+            },
+            buttonLogIn() {
+                axios
+                    .post('members/signin', {
+                        email: this.$store.getters.email,
+                        password: this.$store.getters.password
+                    })
+                    .then(response => (this.$store.commit("user_token", response.data.token),
+                            this.$store.commit("user_id", response.data.member.id),
+                            this.$store.commit("fullname", response.data.member.fullname),
+                            this.$store.commit("email", response.data.member.email),
+                            this.$store.commit("user", true),
+                            this.$store.commit("etatSession", response.data),
+                            this.$router.push('Conversations')
+                    ))
             }
         }
     }

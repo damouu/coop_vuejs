@@ -39,6 +39,9 @@
                             <input class="input is-warning input is-rounded" v-model="Message" type="text"
                                    v-on:input="editMessage"
                                    v-on:keyup.enter="buttoneditMessage(message.id)" placeholder="Edit previous message">
+                            <button class="button is-warning" v-on:click="buttoneditMessage(message.id)"> Edit
+                                Message
+                            </button>
                             <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
                 </span>
@@ -55,6 +58,7 @@
                 <div class="control has-icons-left has-icons-right">
                     <input class="input is-info input is-rounded" v-model="Message" type="text" v-on:input="setMessage"
                            v-on:keyup.enter="buttonsetMessage" ref="Message" placeholder="Write a new message">
+                    <button class="button is-success " v-on:click="buttonsetMessage"> Submit</button>
                     <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
     </span>
@@ -78,75 +82,47 @@
             editConversationTopic: function (event) {
                 this.$store.commit('editConversationTopic', event.target.value)
             },
-            async buttonEditConversation() {
-                try {
-                    await
-                        axios
-                            .put('channels/' + this.$route.params.id, {
-                                label: this.$store.state.editConversationLabel,
-                                topic: this.$store.state.editConversationTopic,
-                                token: this.$store.getters.user_token
-                            })
-                    this.$router.go("Conversations.vue");
-                } catch (error) {
-                    console.log(error)
-                }
+            buttonEditConversation() {
+                axios
+                    .put('channels/' + this.$route.params.id, {
+                        label: this.$store.state.editConversationLabel,
+                        topic: this.$store.state.editConversationTopic,
+                        token: this.$store.getters.user_token
+                    })
+                this.$router.go("Conversations.vue");
             },
-            async buttongetMessages() {
-                try {
-                    await
-                        axios
-                            .get('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
-                                channel_id: this.$route.params.id,
-                                token: this.$store.getters.user_token
-                            })
-                            .then(response => (this.$store.commit("AllConvMessage", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            buttongetMessages() {
+                axios
+                    .get('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("AllConvMessage", response.data)))
             },
-            async buttonsetMessage() {
-                try {
-                    await
-                        axios
-                            .post('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
-                                channel_id: this.$route.params.id,
-                                member_id: this.$store.getters.user_id,
-                                message: this.$store.getters.message,
-                                token: this.$store.getters.user_token
-                            })
-                            .then(response => (this.$store.commit("conversations", response.data)),
-                                this.buttongetMessages()),
-                        this.$refs.Message.value = null;
-                } catch (error) {
-                    console.log(error)
-                }
+            buttonsetMessage() {
+                axios
+                    .post('channels/' + this.$route.params.id + "/posts?token=" + this.$store.getters.user_token, {
+                        channel_id: this.$route.params.id,
+                        member_id: this.$store.getters.user_id,
+                        message: this.$store.getters.message,
+                        token: this.$store.getters.user_token
+                    })
+                    .then(response => (this.$store.commit("conversations", response.data)),
+                        this.buttongetMessages())
+                this.$refs.Message.value = null;
             },
-            async buttondeleteMessage(id_message) {
-                try {
-                    await
-                        axios
-                            .delete('channels/' + this.$route.params.id + "/posts/" + id_message + "?token=" + this.$store.getters.user_token, {})
-                    this.buttongetMessages()
-                } catch (error) {
-                    console.log(error)
-                }
+            buttondeleteMessage(id_message) {
+                axios
+                    .delete('channels/' + this.$route.params.id + "/posts/" + id_message + "?token=" + this.$store.getters.user_token, {})
+                    .then(this.buttongetMessages())
             },
-            async buttoneditMessage(message_id) {
-                try {
-                    await
-                        axios
-                            .post('channels/' + this.$route.params.id + "/posts?id=" + message_id, {
-                                message: this.$store.getters.editMessage,
-                                token: this.$store.getters.user_token
-                            })
-                    this.buttondeleteMessage(message_id);
-                    this.buttongetMessages()
-                } catch (error) {
-                    console.log(error)
-                }
+            buttoneditMessage(message_id) {
+                axios
+                    .put('channels/' + this.$route.params.id + "/posts/" + message_id, {
+                        message: this.$store.getters.editMessage,
+                        token: this.$store.getters.user_token
+                    })
+                    .then(this.buttongetMessages())
             },
-        },
+        }
+        ,
         beforeMount() {
             this.buttongetMessages();
         }

@@ -31,25 +31,15 @@
 <script>
     export default {
         methods: {
-            async buttonViewUsers() {
-                try {
-                    await
-                        axios
-                            .get('members?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("response", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            buttonViewUsers() {
+                axios
+                    .get('members?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("response", response.data)))
             },
-            async buttondeleteUser(user_id) {
-                try {
-                    await
-                        axios
-                            .delete('members/' + user_id + "?token=" + this.$store.getters.user_token, {})
-                    this.buttonViewUsers()
-                } catch (error) {
-                    console.log(error);
-                }
+            buttondeleteUser(user_id) {
+                axios
+                    .delete('members/' + user_id + "?token=" + this.$store.getters.user_token, {})
+                    .then(this.buttonViewUsers)
             },
         },
         beforeMount() {
