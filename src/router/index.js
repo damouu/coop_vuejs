@@ -26,13 +26,13 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Conversations.vue')
     },
     {
-        path: '/UserInfo/:id',
+        path: '/UserInfo/:user_id',
         name: 'UserInfo',
         props: true,
         component: () => import(/* webpackChunkName: "about" */ '../views/UserInfo.vue')
     },
     {
-        path: '/conversation',
+        path: '/conversation/:id',
         name: 'conversation',
         component: () => import(/* webpackChunkName: "about" */ '../views/Conversation.vue')
     }

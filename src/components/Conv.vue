@@ -22,7 +22,7 @@
                            v-model="Message" type="text"
                            v-on:input="editConversationTopic"
                            placeholder="Edit conversation's topic">
-                    <button class="button is-success" v-on:click="setConversation"> edit</button>
+                    <button class="button is-success" v-on:click="editConversation"> edit</button>
                 </div>
             </div>
             <h3 class="title is-3">All messages</h3>
@@ -30,7 +30,7 @@
                 <div v-for="message in $store.getters.AllConvMessage">
                     <div v-if="user.id === message.member_id">
                         <router-link
-                                :to="{ name: 'UserInfo', params: { id: user.id , user_fullname: user.fullname}}">
+                                :to="{ name: 'UserInfo', params: { user_id: user.id , user_fullname: user.fullname}}">
                             <img v-bind:src="'https://api.adorable.io/avatars/10/'+ user.fullname"/>
                             {{user.fullname}}
                         </router-link>
@@ -83,13 +83,13 @@
             editConversationTopic: function (event) {
                 this.$store.commit('editConversationTopic', event.target.value)
             },
-            setConversation() {
+            editConversation() {
                 axios
                     .put('channels/' + this.$route.params.id, {
                         label: this.$store.state.editConversationLabel,
                         topic: this.$store.state.editConversationTopic,
                         token: this.$store.getters.user_token
-                    }).then(this.$router.go("Conversations.vue"))
+                    })
             },
             getMessages() {
                 axios

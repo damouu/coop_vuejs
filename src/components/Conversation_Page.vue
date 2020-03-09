@@ -59,13 +59,12 @@
                         label: this.$store.getters.conversation_label,
                         topic: this.$store.getters.conversation_topic,
                         session_token: this.$store.getters.user_token,
-                    })
-                this.getConversations()
+                    }).then(this.getConversations())
             },
             deleteConversation(conversation_id) {
                 axios
-                    .delete('channels/' + conversation_id + "?token=" + this.$store.getters.user_token, {}),
-                    this.getConversations();
+                    .delete('channels/' + conversation_id + "?token=" + this.$store.getters.user_token, {})
+                    .then(this.getConversations())
             },
             getConversations() {
                 axios
@@ -73,7 +72,7 @@
                     .then(response => (this.$store.commit("conversations", response.data)))
             },
         },
-        beforeMount() {
+        mounted() {
             this.getConversations();
         }
     }

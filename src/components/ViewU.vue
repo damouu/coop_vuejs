@@ -6,7 +6,7 @@
             <div class="columns">
                 <div class="column is-half is-offset-one-quarter">
                     <router-link
-                            :to="{ name: 'UserInfo', params: { id: user.id , user_fullname: user.fullname}}">
+                            :to="{ name: 'UserInfo', params: { user_id: user.id , user_fullname: user.fullname}}">
                         <img v-bind:src="'https://api.adorable.io/avatars/60/'+ user.fullname"/>
                         {{user.fullname}}
                     </router-link>
@@ -15,8 +15,8 @@
                                 v-on:click=deleteMembre(user.id)>
                             <span>Delete</span>
                             <span class="icon is-small">
-      <i class="fas fa-times"></i>
-    </span>
+                        <i class="fas fa-times"></i>
+                            </span>
                         </button>
                     </div>
                     <div v-else>
@@ -42,7 +42,7 @@
                     .then(this.getMembres)
             },
         },
-        beforeMount() {
+        mounted() {
             this.getMembres();
         }
     }
