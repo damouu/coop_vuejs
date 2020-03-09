@@ -121,8 +121,7 @@
                     })
                     .then(this.buttongetMessages())
             },
-        }
-        ,
+        },
         beforeMount() {
             this.buttongetMessages();
         }

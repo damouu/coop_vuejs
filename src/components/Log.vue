@@ -35,10 +35,10 @@
     </span>
             </p>
         </div>
-        <button class="button is-success" v-on:click="buttonCreateUser"> Create an account</button>
-        <button class="button is-danger is-outlined" v-on:click="buttonLogIn"> Log into account</button>
-        <button class="button is-warning is-active" v-on:click="buttonLogout"> Log out</button>
-        <button class="button is-link is-active" v-on:click="buttonEtatSession"> etat de la session</button>
+        <button class="button is-success" v-on:click="setMembre"> Create an account</button>
+        <button class="button is-danger is-outlined" v-on:click="signInMembre"> Log into account</button>
+        <button class="button is-warning is-active" v-on:click="signOutMembre"> Log out</button>
+        <button class="button is-link is-active" v-on:click="signedInMembre"> etat de la session</button>
         <div v-if="$store.getters.user === true">
             <article class="message is-success">
                 <div class="message-header">
@@ -76,7 +76,7 @@
             password: function (event) {
                 this.$store.commit('password', event.target.value)
             },
-            buttonCreateUser() {
+            setMembre() {
                 if (this.$refs.CheckPassword.value == this.$refs.Password.value) {
                     axios
                         .post('members', {
@@ -100,7 +100,7 @@
                     alert("user already exist")
                 }
             },
-            buttonLogout() {
+            signOutMembre() {
                 axios
                     .delete('members/signout?session_token=' + this.$store.getters.user_token, {})
                     .then(this.$store.commit("user", false)),
@@ -111,13 +111,13 @@
                     this.$store.commit("etatSession", " "),
                     this.$store.commit("email", " ")
             },
-            buttonEtatSession() {
+            signedInMembre() {
                 axios
                     .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {})
                     .then(response => (this.$store.commit("etatSession", response.data)))
                 alert("you are log as " + this.$store.getters.etatSession.member.fullname)
             },
-            buttonLogIn() {
+            signInMembre() {
                 axios
                     .post('members/signin', {
                         email: this.$store.getters.email,

@@ -12,7 +12,7 @@
                     </router-link>
                     <div v-if="user.id !== $store.state.user_id">
                         <button class="button is-danger is-outlined is-rounded"
-                                v-on:click=buttondeleteUser(user.id)>
+                                v-on:click=deleteMembre(user.id)>
                             <span>Delete</span>
                             <span class="icon is-small">
       <i class="fas fa-times"></i>
@@ -31,19 +31,19 @@
 <script>
     export default {
         methods: {
-            buttonViewUsers() {
+            getMembres() {
                 axios
                     .get('members?session_token=' + this.$store.getters.user_token, {})
                     .then(response => (this.$store.commit("response", response.data)))
             },
-            buttondeleteUser(user_id) {
+            deleteMembre(user_id) {
                 axios
                     .delete('members/' + user_id + "?token=" + this.$store.getters.user_token, {})
-                    .then(this.buttonViewUsers)
+                    .then(this.getMembres)
             },
         },
         beforeMount() {
-            this.buttonViewUsers();
+            this.getMembres();
         }
     }
 </script>

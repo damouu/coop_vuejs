@@ -16,7 +16,7 @@
                             {{conversation.label}} - {{conversation.topic}} : {{conversation.created_at}}
                         </router-link>
                         <button class="button is-danger is-outlined is-rounded"
-                                v-on:click=buttondeleteConversation(conversation.id)>
+                                v-on:click=deleteConversation(conversation.id)>
                             <span>Delete</span>
                             <span class="icon is-small">
       <i class="fas fa-times"></i>
@@ -34,7 +34,7 @@
                     <input class="input is-rounded input is-info" v-on:input="conversation_topic" type="text"
                            placeholder="Conversation's topic">
                     <br/>
-                    <button class="button is-success" v-on:click="buttonCreateConversation"> Submit</button>
+                    <button class="button is-success" v-on:click="setConversation"> Submit</button>
                 </div>
             </div>
         </div>
@@ -53,54 +53,34 @@
             conversation_topic: function (event) {
                 this.$store.commit('conversation_topic', event.target.value)
             },
-            async buttonCreateConversation() {
-                try {
-                    await
-                        axios
-                            .post('channels', {
-                                label: this.$store.getters.conversation_label,
-                                topic: this.$store.getters.conversation_topic,
-                                session_token: this.$store.getters.user_token,
-                            })
-                    this.buttonAllConversation()
-                } catch (error) {
-                    console.log(error);
-                }
+            setConversation() {
+                axios
+                    .post('channels', {
+                        label: this.$store.getters.conversation_label,
+                        topic: this.$store.getters.conversation_topic,
+                        session_token: this.$store.getters.user_token,
+                    })
+                this.getConversations()
             },
-            async buttondeleteConversation(conversation_id) {
-                try {
-                    await
-                        axios
-                            .delete('channels/' + conversation_id + "?token=" + this.$store.getters.user_token, {})
-                    this.buttonAllConversation()
-                } catch (error) {
-                    console.log(error);
-                }
+            deleteConversation(conversation_id) {
+                axios
+                    .delete('channels/' + conversation_id + "?token=" + this.$store.getters.user_token, {}),
+                    this.getConversations();
             },
-            async buttonAllConversation() {
-                try {
-                    await
-                        axios
-                            .get('channels?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("conversations", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            getConversations() {
+                axios
+                    .get('channels?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("conversations", response.data)))
             },
-            async buttonViewUsers() {
-                try {
-                    await
-                        axios
-                            .get('members?session_token=' + this.$store.getters.user_token, {})
-                            .then(response => (this.$store.commit("response", response.data)))
-                } catch (error) {
-                    console.log(error)
-                }
+            getMembres() {
+                axios
+                    .get('members?session_token=' + this.$store.getters.user_token, {})
+                    .then(response => (this.$store.commit("response", response.data)))
             },
         },
         beforeMount() {
-            this.buttonAllConversation();
-            this.buttonViewUsers();
+            this.getConversations();
+            this.getMembres();
         }
     }
 </script>
