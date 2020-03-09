@@ -24,7 +24,7 @@ export default new Vuex.Store({
         message: '',
         AllConvMessage: '',
         etatSession: '',
-        editMessage: '',
+        editMessageText: '',
         editConversationLabel: '',
         editConversationTopic: '',
         user_avatar: '',
@@ -70,8 +70,8 @@ export default new Vuex.Store({
         response(state, response) {
             state.response = response;
         },
-        editMessage(state, editMessage) {
-            state.editMessage = editMessage;
+        editMessageText(state, editMessageText) {
+            state.editMessageText = editMessageText;
         },
         editConversationLabel(state, editConversationLabel) {
             state.editConversationLabel = editConversationLabel;
@@ -96,7 +96,7 @@ export default new Vuex.Store({
         message: state => state.message,
         AllConvMessage: state => state.AllConvMessage,
         conversations: state => state.conversations,
-        editMessage: state => state.editMessage,
+        editMessageText: state => state.editMessageText,
         user_avatar: state => state.user_avatar,
         etatSession: state => state.etatSession
     },

@@ -72,15 +72,9 @@
                     .get('channels?session_token=' + this.$store.getters.user_token, {})
                     .then(response => (this.$store.commit("conversations", response.data)))
             },
-            getMembres() {
-                axios
-                    .get('members?session_token=' + this.$store.getters.user_token, {})
-                    .then(response => (this.$store.commit("response", response.data)))
-            },
         },
         beforeMount() {
             this.getConversations();
-            this.getMembres();
         }
     }
 </script>
