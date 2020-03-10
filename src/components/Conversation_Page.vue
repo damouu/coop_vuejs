@@ -3,7 +3,7 @@
         <div v-if="this.$store.state.user === true">
             <p class="subtitle is-3"> Welcome <span
                     style="color:mediumseagreen"> {{this.$store.getters.fullname}} </span> <img
-                    v-bind:src="'https://api.adorable.io/avatars/20/'+ $store.getters.fullname"/></p>
+                    v-bind:src="'https://api.adorable.io/avatars/60/'+ $store.getters.user_id + '.png'"/></p>
             <img alt="Vue logo"
                  src="http://conseilsjeux.com/wp-content/uploads/2019/12/Comment-obtenir-le-filtre-quotQuels-Pok%C3%A9mon-%C3%AAtes-vousquot-sur-Instagram.jpg">
             <h2 class="title">Here are all the current conversations</h2>
@@ -12,7 +12,7 @@
                     <div class="column auto">
                         <img src="https://icons.iconarchive.com/icons/inipagi/job-seeker/256/conversation-icon.png">
                         <router-link
-                                :to="{ name: 'conversation', params: { id: conversation.id , topic: conversation.topic , label: conversation.label}}">
+                                :to="{ name: 'conversation', params: { id: conversation.id}}">
                             {{conversation.label}} - {{conversation.topic}} : {{conversation.created_at}}
                         </router-link>
                         <button class="button is-danger is-outlined is-rounded"
@@ -59,12 +59,11 @@
                         label: this.$store.getters.conversation_label,
                         topic: this.$store.getters.conversation_topic,
                         session_token: this.$store.getters.user_token,
-                    }).then(this.getConversations())
+                    }).then(this.getConversations)
             },
             deleteConversation(conversation_id) {
                 axios
-                    .delete('channels/' + conversation_id + "?token=" + this.$store.getters.user_token, {})
-                    .then(this.getConversations())
+                    .delete('channels/' + conversation_id + "?token=" + this.$store.getters.user_token, {}).then(this.getConversations)
             },
             getConversations() {
                 axios

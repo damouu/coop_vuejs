@@ -22,17 +22,22 @@ export default new Vuex.Store({
         user_token: '',
         user_id: '',
         message: '',
+        conversation: '',
         AllConvMessage: '',
         etatSession: '',
         editMessageText: '',
         editConversationLabel: '',
         editConversationTopic: '',
         user_avatar: '',
+        getMembres: '',
         user: false
     },
     mutations: {
         etatSession(state, etatSession) {
             state.etatSession = etatSession;
+        },
+        getMembres(state, getMembres) {
+            state.getMembres = getMembres;
         },
         conversation_label(state, conversation_label) {
             state.conversation_label = conversation_label;
@@ -42,6 +47,9 @@ export default new Vuex.Store({
         },
         conversation_topic(state, conversation_topic) {
             state.conversation_topic = conversation_topic;
+        },
+        conversation(state, conversation) {
+            state.conversation = conversation;
         },
         fullname(state, fullname) {
             state.fullname = fullname;
@@ -86,6 +94,7 @@ export default new Vuex.Store({
     getters: {
         conversation_label: state => state.conversation_label,
         conversation_topic: state => state.conversation_topic,
+        conversation: state => state.conversation,
         fullname: state => state.fullname,
         email: state => state.email,
         password: state => state.password,
@@ -98,6 +107,7 @@ export default new Vuex.Store({
         conversations: state => state.conversations,
         editMessageText: state => state.editMessageText,
         user_avatar: state => state.user_avatar,
+        getMembres: state => state.getMembres,
         etatSession: state => state.etatSession
     },
     actions: {},

@@ -46,7 +46,7 @@
                     <button class="delete" aria-label="delete"></button>
                 </div>
                 <div class="message-body">
-                    <img v-bind:src="'https://api.adorable.io/avatars/60/'+ $store.state.fullname"/>
+                    <img v-bind:src="'https://api.adorable.io/avatars/60/'+ $store.getters.user_id + '.png'"/>
                     <strong>you are log as {{$store.state.etatSession.member.fullname}}</strong>
                 </div>
             </article>
@@ -115,7 +115,7 @@
                 axios
                     .get('members/' + this.$store.getters.user_id + "/signedin?token=" + this.$store.getters.user_token, {})
                     .then(response => (this.$store.commit("etatSession", response.data)))
-                alert("you are log as " + this.$store.getters.etatSession.member.fullname)
+                alert("you are log as " + response.data.member.fullname)
             },
             signInMembre() {
                 axios

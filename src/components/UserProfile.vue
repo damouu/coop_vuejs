@@ -1,7 +1,7 @@
 <template>
     <div class="hello">
-        <img v-bind:src="'https://api.adorable.io/avatars/100/'+ $route.params.user_fullname"/>
-        <div v-for="user in $store.getters.response">
+        <img v-bind:src="'https://api.adorable.io/avatars/100/'+ $route.params.user_id + '.png'"/>
+        <div v-for="user in $store.getters.getMembres">
             <div v-if="user.id == $route.params.user_id">
                 <div class="column is-half is-offset-one-quarter">
                     User Name : <span
@@ -15,7 +15,7 @@
                     <h2 class="subtitle">the user's last messages</h2>
                     <div v-for="message in AllConvMessage">
                         <router-link
-                                :to="{ name: 'conversation', params: { id: message.channel_id , message_id: message.id}}">
+                                :to="{ name: 'conversation', params: { id: message.channel_id }}">
                             <div class="list-item">
                                 {{message.created_at}} : {{message.message}}
                             </div>
