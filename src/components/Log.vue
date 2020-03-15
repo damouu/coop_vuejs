@@ -97,7 +97,7 @@
                             this.$store.commit("etatSession", response.data),
                             this.$router.push('Conversations')))
                 } else {
-                    alert("user already exist")
+                    alert("password and CheckPassword fields are not the same, please be sure your password and checkpassword are the same.")
                 }
             },
             signOutMembre() {
